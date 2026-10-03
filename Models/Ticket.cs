@@ -7,12 +7,12 @@ namespace ticketManage.Models
     {
         public long Id { get; set; }
         public TicketStatus Status { get; set; } = TicketStatus.Unassigned;
-        public long IssuedByUserId { get; set; }
+        public required string IssuedByUserId { get; set; }
         public User IssuedByUser { get; set; } = null!;
         public DateTime? Expiry { get; set; }
         public string Content { get; set; } = "";
 
-        public long? AssignedToUserId { get; set; }
+        public string? AssignedToUserId { get; set; }
         public User? AssignedToUser { get; set; }
         public ICollection<FileAsset>? Attachments{ get; set; }
         public bool IsDeleted { get; set; }

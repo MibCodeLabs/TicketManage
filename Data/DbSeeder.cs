@@ -15,32 +15,37 @@ namespace ticketManage.Data
 
             var admin = await userManager.FindByEmailAsync(adminEmail);
 
-            if (admin == null)
+            if (admin != null)
+                return;
+
+            admin = new User
             {
-                admin = new User
-                {
-                    UserName = adminEmail,
-                    Email = adminEmail,
-                    EmailConfirmed = true,
+                UserName = adminEmail,
+                Email = adminEmail,
+                EmailConfirmed = true,
 
-                    FullName = "System Administrator",
-                    AccountType = AccountType.Admin,
+                FullName = "System Administrator",
+                AccountType = AccountType.Admin,
 
-                    CreatedBy = "System",
-                    ModifiedBy = "System",
-                    CreatedAt = DateTime.UtcNow,
-                    ModifiedAt = DateTime.UtcNow,
-                    IsDeleted = false
-                };
+                ProfilePicture = "/images/default-avatar.svg",
 
-                var result = await userManager.CreateAsync(admin, adminPassword);
+                CreatedBy = "System",
+                ModifiedBy = "System",
+                IsDeleted = false
+            };
 
-                if (!result.Succeeded)
-                {
-                    throw new Exception(
-                        string.Join(", ", result.Errors.Select(e => e.Description))
-                    );
-                }
+            var result = await userManager.CreateAsync(admin, adminPassword);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(
+                    Environment.NewLine,
+                    result.Errors.Select(e => e.Description)
+                );
+
+                throw new InvalidOperationException(
+                    $"Failed to create admin user:{Environment.NewLine}{errors}"
+                );
             }
         }
     }

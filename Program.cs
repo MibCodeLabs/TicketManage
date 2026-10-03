@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MySqlConnector;
 using ticketManage.Data;
+using ticketManage.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +19,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
             builder.Configuration.GetConnectionString("DefaultConnection")
         )));
 
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    await DbSeeder.SeedAsync(scope.ServiceProvider);
+}
+
 app.UseStaticFiles();
 app.MapGet("/healthz", async (IConfiguration configuration) =>
 {
@@ -49,7 +61,6 @@ app.MapGet("/healthz", async (IConfiguration configuration) =>
         );
     }
 });
-// Configure the HTTP request pipeline.
 
 var summaries = new[]
 {
@@ -70,7 +81,6 @@ app.MapGet("/weatherforecast", () =>
 });
 
 app.Run();
-
 internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);

@@ -26,4 +26,13 @@
         Database,
         S3
     }
+
+    public enum FileAssetPurpose
+    {
+        ProfilePicture,
+        TicketAttachment,
+        CommentAttachment,
+        RichTextImage
+    }
+
 }

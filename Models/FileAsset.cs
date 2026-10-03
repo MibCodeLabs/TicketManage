@@ -1,4 +1,6 @@
-﻿namespace ticketManage.Models
+﻿using ticketManage.Utils;
+
+namespace ticketManage.Models
 {
     public class FileAsset : AuditableEntity
     {
@@ -15,6 +17,9 @@
         public StorageObject StorageObject { get; set; } = null!;
 
         public bool IsDeleted { get; set; }
+
+        public FileAssetPurpose Purpose { get; set; }
+        public string Note { get; set; }
 
     }
 }
