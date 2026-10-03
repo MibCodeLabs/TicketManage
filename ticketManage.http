@@ -1,0 +1,6 @@
+@ticketManage_HostAddress = http://localhost:5269
+
+GET {{ticketManage_HostAddress}}/
+Accept: application/json
+
+###
